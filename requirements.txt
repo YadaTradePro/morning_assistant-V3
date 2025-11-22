@@ -1,0 +1,9 @@
+requests
+python-dotenv
+sqlalchemy
+pandas
+python-telegram-bot
+numpy
+streamlit
+plotly
+redis
