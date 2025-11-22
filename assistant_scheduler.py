@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 # --- تنظیمات ---
 TEHRAN_TZ = ZoneInfo("Asia/Tehran")
 SERVER_URL = "http://localhost:5000/run"  # آدرس سرور Flask
-POLL_INTERVAL_SECONDS = 270 # هر 240 ثانیه یکبار تحلیل کن
+POLL_INTERVAL_SECONDS = 220 # هر 220 ثانیه یکبار تحلیل کن
 MARKET_START_HOUR = 9
 MARKET_END_HOUR = 16
 
@@ -63,4 +63,5 @@ def run_scheduler_client():
             time.sleep(10)
 
 if __name__ == "__main__":
+
     run_scheduler_client()
