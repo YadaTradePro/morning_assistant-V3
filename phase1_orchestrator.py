@@ -248,7 +248,7 @@ class Phase1Orchestrator:
                 # ذخیره با فرمت JSON
                 self.redis_client.set(REALTIME_CACHE_KEY, json.dumps(all_tickers_data))
                 # می‌توانیم Expiration هم بگذاریم که دیتا بیات نشود (مثلا 2 دقیقه)
-                self.redis_client.expire(REALTIME_CACHE_KEY, 120) 
+                self.redis_client.expire(REALTIME_CACHE_KEY, 300) 
                 
                 logger.info(f"✅ Successfully cached real-time data for {len(all_tickers_data)} symbols in Redis.")
             except Exception as e:
