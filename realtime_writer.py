@@ -14,8 +14,8 @@ TEHRAN_TZ = ZoneInfo("Asia/Tehran")
 POLL_INTERVAL_SECONDS = 5      # فاصله بین هر بار واکشی (ثانیه)
 MARKET_START_HOUR = 8          # معمولاً بازار از ۸:۴۵ سفارش‌گیری دارد، از ۸ شروع کنیم بهتر است
 MARKET_START_MINUTE = 55
-MARKET_END_HOUR = 15
-MARKET_END_MINUTE = 35         # کمی بعد از ۱۲:۳۰ برای اطمینان از دریافت قیمت‌های پایانی
+MARKET_END_HOUR = 16
+MARKET_END_MINUTE = 0         # کمی بعد از ۱۲:۳۰ برای اطمینان از دریافت قیمت‌های پایانی
 
 # --- تنظیمات لاگ ---
 logger = logging.getLogger(__name__)
