@@ -57,17 +57,19 @@ def fetch_potential_symbols_with_phase1_data(db_session) -> Dict[str, Any]:
             FROM candlestick_pattern_detection
         ),
         AllCandidates AS (
-            SELECT symbol_id, score AS golden_key_score, jdate FROM golden_key_results WHERE score > 20
+            SELECT symbol_id, score AS golden_key_score, jdate, 'GoldenKey' AS source_table FROM golden_key_results WHERE score > 20
             UNION
-            SELECT symbol_id, probability_percent AS golden_key_score, jdate FROM potential_buy_queue_results WHERE probability_percent > 50
+            SELECT symbol_id, probability_percent AS golden_key_score, jdate, 'BuyQueue' AS source_table FROM potential_buy_queue_results WHERE probability_percent > 50
             UNION
-            -- ❗ اصلاح شده: استفاده از jentry_date به جای jdate در weekly_watchlist_results
-            SELECT symbol_id, 100 as golden_key_score, jentry_date AS jdate FROM weekly_watchlist_results
+            SELECT symbol_id, 100 as golden_key_score, jentry_date AS jdate, 'Watchlist' AS source_table FROM weekly_watchlist_results
+            UNION
+            SELECT symbol_id, 100 as golden_key_score, analysis_date As jdate, 'DynamicSupport' AS source_table FROM dynamic_support_opportunities
         )
         SELECT DISTINCT
             ac.symbol_id,
-            csd.symbol_name,  -- نام نماد (برای اتصال به Redis حیاتی است)
+            csd.symbol_name,
             ac.golden_key_score,
+            ac.source_table,
             tech.RSI,
             tech.halftrend_signal,
             candle.pattern_name
@@ -116,25 +118,27 @@ def fetch_live_market_data_from_cache() -> Optional[Dict[str, Dict[str, Any]]]:
 
 def save_json_log(alerts):
     """
-    💡 اصلاح شده: ذخیره آلرت‌ها با نام و ساختار سازگار با داشبورد Streamlit.
+    💡 اصلاح شده: ذخیره لاگ با نام روز جاری، حتی اگر alerts خالی باشد، 
+    تا Dashboard مطمئن باشد که فرآیند تحلیل امروز اجرا شده است.
     """
-    if not alerts: return
+    # ❗ این شرط حذف می‌شود: if not alerts: return 
     
     now = datetime.now(TEHRAN_TZ)
     # 1. نام فایل: phase2_alerts_YYYYMMDD_HHMM.json
+    # اگر در یک دقیقه چندین بار اجرا شود، فایل قبلی بازنویسی می‌شود که مشکلی نیست.
     filename = os.path.join(LOG_DIR, f"phase2_alerts_{now.strftime('%Y%m%d_%H%M')}.json")
     
     # 2. ساختار: { 'timestamp': '...', 'alerts': [...] }
     log_data = {
         "timestamp": now.strftime('%Y-%m-%d %H:%M:%S'),
         "alerts_count": len(alerts),
-        "alerts": alerts # لیست دیکشنری‌های فلت شده از analysis_engine.py
+        "alerts": alerts 
     }
     
     try:
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(log_data, f, ensure_ascii=False, indent=2)
-        logger.info(f"📝 Dashboard Log Saved: {filename}")
+        logger.info(f"📝 Dashboard Log Saved ({len(alerts)} alerts): {filename}")
     except Exception as e:
         logger.error(f"❌ Failed to save log: {e}")
 
