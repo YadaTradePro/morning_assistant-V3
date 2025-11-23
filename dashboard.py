@@ -27,8 +27,16 @@ os.makedirs(LOG_DIR, exist_ok=True)
 # پیدا کردن آخرین JSON لاگ
 # جستجو در داخل پوشه logs
 logs = glob.glob(os.path.join(LOG_DIR, "phase2_alerts_*.json"))
-if logs:
-    latest_log = max(logs, key=os.path.getctime)
+# 💡 اصلاح: فیلتر کردن لاگ‌ها بر اساس تاریخ امروز
+today_date_str = datetime.now().strftime('%Y%m%d')
+
+# فقط فایل‌هایی را که تاریخ امروز را در نام خود دارند (YYYYMMDD) در نظر بگیرید.
+today_logs = [log for log in logs if today_date_str in os.path.basename(log)]
+
+if today_logs:
+    # از بین لاگ‌های امروز، جدیدترین را انتخاب کنید.
+    latest_log = max(today_logs, key=os.path.getctime) 
+    
     try:
         with open(latest_log, 'r', encoding='utf-8') as f:
             data = json.load(f)
