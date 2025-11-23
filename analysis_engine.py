@@ -148,6 +148,9 @@ def analyze_symbol_combined(live: Dict[str, Any], phase1: Dict[str, Any]) -> Dic
     rsi_val = to_float_or_zero(phase1.get('RSI') or 50)
     halftrend = int(to_float_or_zero(phase1.get('halftrend_signal') or 0))
     pattern = str(phase1.get('pattern_name') or '').lower()
+
+    # 💡 افزودن ستون منبع (Source Table)
+    source_table = phase1.get('source_table', 'Tech Analysis')
     
     # 5. محاسبات متریک‌ها
     power_ratio = compute_power_ratio(buy_i_vol, buy_i_count, sell_i_vol, sell_i_count)
@@ -160,6 +163,7 @@ def analyze_symbol_combined(live: Dict[str, Any], phase1: Dict[str, Any]) -> Dic
     score = 0.0
     reasons = []
 
+    reasons.append(f"Source: {source_table}")
     # A) امتیاز تکنیکال (Golden Key)
     if golden_key_score >= 80:
         score += 3.0
@@ -234,6 +238,7 @@ def analyze_symbol_combined(live: Dict[str, Any], phase1: Dict[str, Any]) -> Dic
     return {
         "symbol_id": tsetmc_id,         # کد عددی (برای لینک دادن اگر نیاز شد)
         "symbol_name": symbol_label,     # نام فارسی (مثلا فولاد) -> داشبورد این را می‌خواهد
+        "source_table": source_table,
         
         "score": round(score, 1),
         "is_strong_buy": is_strong_buy,
