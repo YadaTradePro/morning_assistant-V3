@@ -63,5 +63,4 @@ def run_scheduler_client():
             time.sleep(10)
 
 if __name__ == "__main__":
-
     run_scheduler_client()
