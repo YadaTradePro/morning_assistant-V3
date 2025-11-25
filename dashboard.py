@@ -10,9 +10,9 @@ import numpy as np
 from streamlit_autorefresh import st_autorefresh 
 
 # --- تنظیمات رفرش خودکار ---
-# هر ۵ ثانیه رفرش شود (۵ * ۱۰۰۰ میلی‌ثانیه)
+# هر 60 ثانیه رفرش شود (60 * ۱۰۰۰ میلی‌ثانیه)
 # این خط، کل صفحه داشبورد را به صورت خودکار رفرش می‌کند.
-count = st_autorefresh(interval=5000, key="data_refresher") 
+count = st_autorefresh(interval=60000, key="data_refresher") 
 
 # تنظیمات صفحه
 st.set_page_config(page_title="TSE Trader Dashboard", layout="wide")
