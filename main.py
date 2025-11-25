@@ -57,7 +57,7 @@ def fetch_potential_symbols_with_phase1_data(db_session) -> Dict[str, Any]:
             FROM candlestick_pattern_detection
         ),
         AllCandidates AS (
-            SELECT symbol_id, score AS golden_key_score, jdate, 'GoldenKey' AS source_table FROM golden_key_results WHERE score > 20
+            SELECT symbol_id, score AS golden_key_score, jdate, 'GoldenKey' AS source_table FROM golden_key_results WHERE score > 26
             UNION
             SELECT symbol_id, probability_percent AS golden_key_score, jdate, 'BuyQueue' AS source_table FROM potential_buy_queue_results WHERE probability_percent > 50
             UNION
