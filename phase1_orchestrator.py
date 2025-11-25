@@ -50,7 +50,7 @@ class Phase1Orchestrator:
     # ---------------------------------------------------------
     def get_unique_symbols_from_db(self) -> List[str]:
         """
-        این متد نام نمادها (مثلاً 'مانی'، 'فولاد') را از دیتابیس می‌گیرد.
+        این متد نام نمادها (مثلاً 'شپلی'، 'فولاد') را از دیتابیس می‌گیرد.
         چون pytse-client با نام نماد کار می‌کند، نه با کد عددی (TSETMC ID).
         """
         session = get_db_session()
@@ -68,7 +68,7 @@ class Phase1Orchestrator:
             # اعمال فیلتر: GoldenKeyResult.score > 24
             golden = (
                 session.query(GoldenKeyResult.symbol_name)
-                .filter(GoldenKeyResult.score > 24)
+                .filter(GoldenKeyResult.score > 26)
                 .all()
             )
 
@@ -89,7 +89,7 @@ class Phase1Orchestrator:
             for r in dynamic: 
                 if r.symbol_name: unique_names.add(r.symbol_name)
             
-            logger.info(f"✅ Found {len(unique_names)} unique symbol names (e.g., 'مانی') to monitor.")
+            logger.info(f"✅ Found {len(unique_names)} unique symbol names (e.g., 'شپلی') to monitor.")
             return list(unique_names)
             
         except AttributeError as e:
